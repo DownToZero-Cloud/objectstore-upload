@@ -1,0 +1,21 @@
+name: 'Objectstore Upload'
+description: 'Objectstore upload action for DownToZero.cloud'
+inputs:
+  context_id:
+    description: 'context id'
+    required: true
+  api_key:
+    description: 'api key'
+    required: true
+  name:
+    description: 'name of the artifact'
+    required: true
+  objectkey:
+    description: 'key of the objectstore, if empty name will be used'
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        curl -X 'PUT' 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.name }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-CONTEXT: ${{ inputs.context_id }}' -d @${{ inputs.name }} 
+      shell: bash
