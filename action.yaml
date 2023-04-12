@@ -17,5 +17,5 @@ runs:
   using: "composite"
   steps:
     - run: |
-        curl -v -X 'PUT' -L 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.name }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-CONTEXT: ${{ inputs.context_id }}' -d @${{ inputs.name }} 
+        curl -X 'PUT' -L 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.name }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-CONTEXT: ${{ inputs.context_id }}' -d @${{ inputs.name }} 
       shell: bash
