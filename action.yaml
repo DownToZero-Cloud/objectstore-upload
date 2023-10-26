@@ -19,10 +19,20 @@ runs:
     - name: uploading with object_key
       if: ${{ inputs.object_key != '' }}
       run: |
-        curl -X 'PUT' --max-time 300 -f -L 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.object_key }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-CONTEXT: ${{ inputs.context_id }}' --data-binary @${{ inputs.name }} 
+        if [ -f "${{ inputs.name }}" ]; then
+          curl -X 'PUT' --max-time 300 -f -L 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.object_key }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-CONTEXT: ${{ inputs.context_id }}' --data-binary @${{ inputs.name }} 
+        else 
+          echo "${{ inputs.name }} does not exist."
+          exit 1
+        fi
       shell: bash
     - name: uploading with artifact name
       if: ${{ inputs.object_key == '' }}
       run: |
-        curl -X 'PUT' --max-time 300 -f -L 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.name }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-CONTEXT: ${{ inputs.context_id }}' --data-binary @${{ inputs.name }} 
+        if [ -f "${{ inputs.name }}" ]; then
+          curl -X 'PUT' --max-time 300 -f -L 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.name }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-CONTEXT: ${{ inputs.context_id }}' --data-binary @${{ inputs.name }} 
+        else 
+          echo "${{ inputs.name }} does not exist."
+          exit 1
+        fi
       shell: bash
