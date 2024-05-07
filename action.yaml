@@ -1,9 +1,6 @@
 name: 'Objectstore Upload'
 description: 'Objectstore upload action for DownToZero.cloud'
 inputs:
-  context_id:
-    description: 'context id'
-    required: true
   api_key:
     description: 'api key'
     required: true
@@ -13,6 +10,9 @@ inputs:
   object_key:
     description: 'key of the objectstore, if empty name will be used'
     required: false
+  expiration:
+    description: 'expiration of the object, the format must be ISO8601 duration format, e.g. P30D, P23DT23H, or P0.5Y, or PT1H'
+    required: false
 runs:
   using: "composite"
   steps:
@@ -20,7 +20,7 @@ runs:
       if: ${{ inputs.object_key != '' }}
       run: |
         if [ -f "${{ inputs.name }}" ]; then
-          curl -X 'PUT' --max-time 300 -f -L 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.object_key }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-CONTEXT: ${{ inputs.context_id }}' --data-binary @${{ inputs.name }} 
+          curl -X 'PUT' --max-time 300 -f -L 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.object_key }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-EXPIRATION: ${{ inputs.expiration }}' --data-binary @${{ inputs.name }} 
         else 
           echo "${{ inputs.name }} does not exist."
           exit 1
@@ -30,7 +30,7 @@ runs:
       if: ${{ inputs.object_key == '' }}
       run: |
         if [ -f "${{ inputs.name }}" ]; then
-          curl -X 'PUT' --max-time 300 -f -L 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.name }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-CONTEXT: ${{ inputs.context_id }}' --data-binary @${{ inputs.name }} 
+          curl -X 'PUT' --max-time 300 -f -L 'https://objectstore.dtz.rocks/api/2022-11-28/obj/${{ inputs.name }}'   -H 'accept: */*'   -H 'X-API-KEY: ${{ inputs.api_key }}'   -H 'X-DTZ-EXPIRATION: ${{ inputs.expiration }}' --data-binary @${{ inputs.name }} 
         else 
           echo "${{ inputs.name }} does not exist."
           exit 1
